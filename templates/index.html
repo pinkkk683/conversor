@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moedas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="icon">
+                $
+            </div>
+            <h1>Conversor de Moedas</h1>
+            <p>Converta entre diferentes moedas em tempo real</p>
+
+            <label for="valor">Valor</label>
+            <input type="number" id="valor" placeholder="Digite o valor">
+
+            <div class="selects">
+                <div>
+                    <label for="de">De</label>
+                    <select id="de">
+                        <option value="EUR" selected>EUR - Euro</option>
+                        <option value="USD">USD - Dólar</option>
+                        <option value="BRL">BRL - Real</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="para">Para</label>
+                    <select id="para">
+                        <option value="BRL" selected>BRL - Real</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="USD">USD - Dólar</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="trocar">↕</button>
+            <button id="converter">Converter</button>
+
+            <div class="resultado" id="resultado">
+                Resultado aparecerá aqui
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const valor = document.getElementById('valor');
+        const de = document.getElementById('de');
+        const para = document.getElementById('para');
+        const resultado = document.getElementById('resultado');
+        const converter = document.getElementById('converter');
+        const trocar = document.getElementById('trocar');
+
+        trocar.addEventListener('click', () => {
+            const temp = de.value;
+            de.value = para.value;
+            para.value = temp;
+        });
+
+        converter.addEventListener('click', async () => {
+            const v = valor.value;
+            const from = de.value;
+            const to = para.value;
+
+            const res = await fetch(`https://api.exchangerate.host/convert?access_key=32e3f2125d41c00420c74daad9ad5c75&from=${from}&to=${to}&amount=${v}`);
+            const data = await res.json();
+            resultado.innerHTML = `<strong>${v} ${from} = ${data.result.toFixed(2)} ${to}</strong>`;
+        });
+    </script>
+</body>
+</html>
+
